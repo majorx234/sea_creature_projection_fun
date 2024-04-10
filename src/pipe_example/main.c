@@ -6,7 +6,7 @@
 
 int main() {
   pid_t childpid;
-  char  send_string[] = "Hello, child!\n";
+  char  send_string[] = "Hello, my parent!\n";
   char  readbuffer[80];
   int fd[2];
   // pipe:
@@ -30,6 +30,9 @@ int main() {
     int nbytes = 0;
     // child process don't need reading -> close file descriptor
     close(fd[0]);
+    // close stdin on child:
+    close(stdin);
+
     nbytes = write(fd[1], send_string, (strlen(send_string)+1));
     printf("send %d bytes\n", nbytes);
     exit(0);
