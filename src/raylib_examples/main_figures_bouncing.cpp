@@ -43,7 +43,8 @@ int main(void){
   InitWindow(800,600, "raylib test");
 
   Texture2D sebastacean = LoadTexture("sebastacean.png");
-
+  MoveState sabastacean_state = {.dx = 200, .dy = 200, .dt =  1.0f/fps};
+  Figure sebastacean_fig = {.texture = sebastacean, .scale_ratio = 0.2, .state = sebastacean_state, .x = screen_width/2.0, .y =  screen_height/2.0};
   int rotation = 0;
   float scale_ratio = 0.2;
 
