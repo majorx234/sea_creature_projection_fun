@@ -17,9 +17,12 @@ set(PIPE_EXAMPLE2_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/pipe_example/main_fork_exec_pipe.cpp
 )
 
-
 set(RAYLIB_EXAMPLE1_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_textures_bouncing.cpp
+)
+
+set(RAYLIB_EXAMPLE2_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_figures_bouncing.cpp
 )
 
 add_executable(pipe_example1)
@@ -44,6 +47,19 @@ target_include_directories(raylib_example1
   ${raylib_INCLUDE_DIRS}
 )
 target_link_libraries(raylib_example1
+  ${raylib_LIBRARIES}
+)
+
+add_executable(raylib_example2)
+target_sources(raylib_example2
+ PRIVATE
+  ${RAYLIB_EXAMPLE2_SRC}
+)
+target_include_directories(raylib_example2
+ PRIVATE
+  ${raylib_INCLUDE_DIRS}
+)
+target_link_libraries(raylib_example2
   ${raylib_LIBRARIES}
 )
 
