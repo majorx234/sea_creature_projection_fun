@@ -12,12 +12,23 @@ struct Movement{
   float y;
 };
 
+
+struct DeleteConstrain {
+  int max_x;
+  int min_x;
+  int max_y;
+  int min_y;
+  bool active;
+};
+
 struct Figure{
   Texture2D texture;
   MoveState state;
   float scale_ratio;
   float x;
   float y;
+  DeleteConstrain delete_constrain;
+  bool (*delete_fun_ptr)(Figure*);
 };
 
 void move_simple(Figure *figure, int screen_width, int screen_height) {
@@ -58,7 +69,9 @@ int main(void){
     .state = sebastacean_state,
     .scale_ratio = 0.2,
     .x = screen_width/2.0,
-    .y =  screen_height/2.0
+    .y =  screen_height/2.0,
+    {0,0,0,0, false},
+    NULL
   };
 
   Rectangle sebastacean_source_rec = { 0.0f, 0.0f, (float)sebastacean.width, (float)sebastacean.height };
@@ -70,7 +83,9 @@ int main(void){
     .state = bubble1_state,
     .scale_ratio = 0.1,
     .x = 400,
-    .y = 0
+    .y = 0,
+    {0,0,0,0, false},
+    NULL
   };
 
   int rotation = 0;
