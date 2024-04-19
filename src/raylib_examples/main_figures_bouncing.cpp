@@ -39,9 +39,10 @@ void move_simple(Figure *figure, int screen_width, int screen_height) {
 
 void move_bumble_upwards(Figure *figure, int screen_width, int screen_height) {
   figure->state.dy = 0.1;
-  figure->state.dx = 2.0 * std::sin(0.1 * figure->state.dt);
+  figure->state.dx = 0.5 * std::sin(0.05 * figure->state.dt);
   figure->y += figure->state.dy;
   figure->x += figure->state.dx;
+  figure->state.dt += 1;
 }
 
 int main(void){
