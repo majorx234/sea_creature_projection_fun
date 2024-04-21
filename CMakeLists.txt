@@ -24,6 +24,9 @@ set(RAYLIB_EXAMPLE1_SRC
 set(RAYLIB_EXAMPLE2_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_figures_bouncing.cpp
 )
+set(RAYLIB_EXAMPLE3_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline.cpp
+)
 
 add_executable(pipe_example1)
 target_sources(pipe_example1
@@ -60,6 +63,19 @@ target_include_directories(raylib_example2
   ${raylib_INCLUDE_DIRS}
 )
 target_link_libraries(raylib_example2
+  ${raylib_LIBRARIES}
+)
+
+add_executable(raylib_example3)
+target_sources(raylib_example3
+ PRIVATE
+  ${RAYLIB_EXAMPLE3_SRC}
+)
+target_include_directories(raylib_example3
+ PRIVATE
+  ${raylib_INCLUDE_DIRS}
+)
+target_link_libraries(raylib_example3
   ${raylib_LIBRARIES}
 )
 
