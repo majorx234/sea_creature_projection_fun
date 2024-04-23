@@ -60,7 +60,7 @@ void move_bubble_upwards(Figure *figure, int screen_width, int screen_height) {
 }
 
 bool delete_bubble(Figure *figure) {
-  if (figure->x > 640){
+  if (figure->y > 640){
     return true;
   }
   return false;
