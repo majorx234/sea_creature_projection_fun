@@ -31,6 +31,7 @@ struct Figure{
   DeleteConstrain delete_constrain;
   void (*move_fct_ptr)(Figure*, int, int);
   bool (*delete_fun_ptr)(Figure*);
+  void (*reset_fun_ptr)(Figure*);
 };
 
 void move_simple(Figure *figure, int screen_width, int screen_height) {
@@ -50,12 +51,24 @@ void move_simple(Figure *figure, int screen_width, int screen_height) {
   }
 }
 
-void move_bumble_upwards(Figure *figure, int screen_width, int screen_height) {
+void move_bubble_upwards(Figure *figure, int screen_width, int screen_height) {
   figure->state.dy = 0.1;
   figure->state.dx = 0.5 * std::sin(0.05 * figure->state.dt);
   figure->y += figure->state.dy;
   figure->x += figure->state.dx;
   figure->state.dt += 1;
+}
+
+bool delete_bubble(Figure *figure) {
+  if (figure->x > 640){
+    return true;
+  }
+  return false;
+}
+
+void reset_buble(Figure *figure) {
+  figure->x = 400;
+  figure->y = 0;
 }
 
 int main(void){
@@ -75,7 +88,8 @@ int main(void){
     .y =  screen_height/2.0,
     .delete_constrain = {0,0,0,0, false},
     .move_fct_ptr = move_simple,
-    .delete_fun_ptr = NULL
+    .delete_fun_ptr = NULL,
+    .reset_fun_ptr = NULL
   };
 
 
@@ -89,8 +103,9 @@ int main(void){
     .x = 400,
     .y = 0,
     .delete_constrain = {0,0,0,0, false},
-    .move_fct_ptr = move_bumble_upwards,
-    .delete_fun_ptr = NULL
+    .move_fct_ptr = move_bubble_upwards,
+    .delete_fun_ptr = delete_bubble,
+    .reset_fun_ptr = reset_buble
   };
 
   int rotation = 0;
@@ -102,7 +117,7 @@ int main(void){
 
   while(!WindowShouldClose()){
     move_simple(&sebastacean_fig, screen_width, screen_height);
-    move_bumble_upwards(&bubble1_fig, screen_width, screen_height);
+    move_bubble_upwards(&bubble1_fig, screen_width, screen_height);
 
     /* start drawing loop */
     BeginDrawing();
@@ -122,10 +137,16 @@ int main(void){
       };
       DrawTexturePro(figure_list[i].texture, figure_list[i].source_rect, figure_dest_rec, figure_origin, (float)rotation, WHITE);
       figure_list[i].move_fct_ptr(&figure_list[i], screen_width, screen_height);
+
+      // ToDo check deletion constrain
+      if(figure_list[i].delete_fun_ptr){
+        if(figure_list[i].delete_fun_ptr(&figure_list[i])) {
+          if (figure_list[i].reset_fun_ptr){
+            figure_list[i].reset_fun_ptr(&figure_list[i]);
+          }
+        }
+      }
     }
-
-    // ToDo check deletion constrain
-
     EndDrawing();
   }
   UnloadTexture(sebastacean);
