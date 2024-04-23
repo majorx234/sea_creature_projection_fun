@@ -52,7 +52,7 @@ void move_simple(Figure *figure, int screen_width, int screen_height) {
 }
 
 void move_bubble_upwards(Figure *figure, int screen_width, int screen_height) {
-  figure->state.dy = 0.1;
+  // figure->state.dy = 0.1;
   figure->state.dx = 0.5 * std::sin(0.05 * figure->state.dt);
   figure->y += figure->state.dy;
   figure->x += figure->state.dx;
@@ -67,7 +67,6 @@ bool delete_bubble(Figure *figure) {
 }
 
 void reset_buble(Figure *figure) {
-  figure->x = 400;
   figure->y = 0;
 }
 
@@ -94,14 +93,60 @@ int main(void){
 
 
   Texture2D bubble1 = LoadTexture("bubble.png");
-  MoveState bubble1_state = {.dx = 20, .dy = 10, .dt = 1.0f/fps};
+  Texture2D bubble2 = LoadTexture("bubble.png");
+  Texture2D bubble3 = LoadTexture("bubble.png");
+  Texture2D bubble4 = LoadTexture("bubble.png");
+  MoveState bubble1_state = {.dx = 0.20, .dy = 0.10, .dt = 1.0f/fps};
+  MoveState bubble2_state = {.dx = 0.10, .dy = 0.11, .dt = 2.0f/fps};
+  MoveState bubble3_state = {.dx = 0.17, .dy = 0.13, .dt = 1.3f/fps};
+  MoveState bubble4_state = {.dx = 0.19, .dy = 0.12, .dt = 1.0f/fps};
+
   Figure bubble1_fig = {
     .texture = bubble1,
     .source_rect = { 0.0f, 0.0f, (float)bubble1.width, (float)bubble1.height },
     .state = bubble1_state,
     .scale_ratio = 0.1,
-    .x = 400,
+    .x = 70,
+    .y = 300,
+    .delete_constrain = {0,0,0,0, false},
+    .move_fct_ptr = move_bubble_upwards,
+    .delete_fun_ptr = delete_bubble,
+    .reset_fun_ptr = reset_buble
+  };
+
+  Figure bubble2_fig = {
+    .texture = bubble2,
+    .source_rect = { 0.0f, 0.0f, (float)bubble2.width, (float)bubble2.height },
+    .state = bubble2_state,
+    .scale_ratio = 0.2,
+    .x = 200,
     .y = 0,
+    .delete_constrain = {0,0,0,0, false},
+    .move_fct_ptr = move_bubble_upwards,
+    .delete_fun_ptr = delete_bubble,
+    .reset_fun_ptr = reset_buble
+  };
+
+  Figure bubble3_fig = {
+    .texture = bubble3,
+    .source_rect = { 0.0f, 0.0f, (float)bubble3.width, (float)bubble3.height },
+    .state = bubble3_state,
+    .scale_ratio = 0.15,
+    .x = 430,
+    .y = 450,
+    .delete_constrain = {0,0,0,0, false},
+    .move_fct_ptr = move_bubble_upwards,
+    .delete_fun_ptr = delete_bubble,
+    .reset_fun_ptr = reset_buble
+  };
+
+  Figure bubble4_fig = {
+    .texture = bubble4,
+    .source_rect = { 0.0f, 0.0f, (float)bubble4.width, (float)bubble4.height },
+    .state = bubble4_state,
+    .scale_ratio = 0.13,
+    .x = 590,
+    .y = 540,
     .delete_constrain = {0,0,0,0, false},
     .move_fct_ptr = move_bubble_upwards,
     .delete_fun_ptr = delete_bubble,
@@ -113,7 +158,7 @@ int main(void){
 
 
   SetTargetFPS(fps);
-  Figure figure_list[2] = {sebastacean_fig, bubble1_fig};
+  Figure figure_list[5] = {sebastacean_fig, bubble1_fig, bubble2_fig, bubble3_fig, bubble4_fig};
 
   while(!WindowShouldClose()){
     move_simple(&sebastacean_fig, screen_width, screen_height);
