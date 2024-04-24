@@ -27,6 +27,9 @@ set(RAYLIB_EXAMPLE2_SRC
 set(RAYLIB_EXAMPLE3_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline.cpp
 )
+set(RAYLIB_EXAMPLE4_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline_moving_figures.cpp
+)
 
 add_executable(pipe_example1)
 target_sources(pipe_example1
@@ -76,6 +79,19 @@ target_include_directories(raylib_example3
   ${raylib_INCLUDE_DIRS}
 )
 target_link_libraries(raylib_example3
+  ${raylib_LIBRARIES}
+)
+
+add_executable(raylib_example4)
+target_sources(raylib_example4
+ PRIVATE
+  ${RAYLIB_EXAMPLE4_SRC}
+)
+target_include_directories(raylib_example4
+ PRIVATE
+  ${raylib_INCLUDE_DIRS}
+)
+target_link_libraries(raylib_example4
   ${raylib_LIBRARIES}
 )
 
