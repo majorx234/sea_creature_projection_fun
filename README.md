@@ -10,11 +10,24 @@
   - create an executable or a new lib for each main feature
 
 ## components:
-### digitalize images from cam
+### 1.digitalize images from cam
 - read handcrafted pictures of fish and digitalie them to texture friendly image files
 - niy
-### create images via touch
+### 2.create images via touch
 - alternative to cam image source
 - niy
-### renderer and scene generation
+### 3.renderer and scene generation
 - takes images of fishes and creates "deep water scene"
+
+# Steps of development
+## 1. main_textures_bouncing.cpp
+- shows how to load texture and do animation in render loop
+## 2. main_figures_bouncing.cpp
+- shows how to organise elements in figures (objects)
+## 3. main_render_pipeline.cpp
+- build structure of pipeline to render objects
+## 4. main_render_pipeline_moving_figures.cpp
+- main loop is doing the complete pipeline processing and rendering of objects
+  - movement
+  - detection of out-of-screen
+  - drawing on screen
