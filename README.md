@@ -2,7 +2,7 @@
 - WIP, this codes is not useable
 - create an animation software, to:
   - take self painted pictures of fishes, starfish and jellyfish
-  - animate them in a swimming way 
+  - animate them in a swimming way
   - create a videostream for projection purpose
 
 # Development Process
@@ -31,3 +31,17 @@
   - movement
   - detection of out-of-screen
   - drawing on screen
+
+# Todo
+## 1.digitalize images from cam
+- start simple implementation with background detection
+  - maybe OpenCV based
+## 2.create images via touch
+- build simple paint program maybe QT based
+  - simple drawing like QtDraw example
+  - buttons for saving as image
+## 3.renderer and scene generation
+- add more movement types
+- add animation for movements
+- have config parser to generate scene out of that
+- automatically check folder for new images and create figures out of them
