@@ -36,6 +36,10 @@
 ## 1.digitalize images from cam
 - start simple implementation with background detection
   - maybe OpenCV based
+    - https://docs.opencv.org/4.x/d1/dc5/tutorial_background_subtraction.html
+    - https://github.com/nating/recognizing-paintings
+    - histograms of gradients (HOG)
+    - https://github.com/DaHoC/trainHOG
 ## 2.create images via touch
 - build simple paint program maybe QT based
   - simple drawing like QtDraw example
