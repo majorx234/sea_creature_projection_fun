@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(sea_creature_projection_fun
-  DESCRIPTION "important configuration in one window for KDE plasma"
+  DESCRIPTION "animate self painted images of water animals"
   VERSION 0.1.0
   LANGUAGES CXX)
 
