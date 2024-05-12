@@ -44,8 +44,8 @@ void calc_sobel_filter(Mat lum_mat, Mat sobel_mat){
 
 int main (){
   char file_path[] = "test_img.png";
-  int width_ = 800;
-  int height_ = 600;
+  int width_ = 0;
+  int height_ = 0;
   uint32_t *pixels_ = (uint32_t*)stbi_load(file_path, &width_, &height_, NULL, 4);
   if (pixels_ == NULL) {
     fprintf(stderr, "ERROR: could not read %s\n", file_path);
@@ -58,4 +58,8 @@ int main (){
     .stride = (uint32_t) width_,
   };
   Mat lum_mat = mat_malloc(width_, height_);
+  calc_luminescence(&img, &lum_mat);
+
+  delete pixels_;
+  delete lum_mat.items;
 }
