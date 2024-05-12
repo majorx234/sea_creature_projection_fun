@@ -109,6 +109,7 @@ target_include_directories(create_texture_animation
  PRIVATE
   ${PROJECT_INCLUDE_DIR}/stb
 )
+target_compile_definitions(create_texture_animation PUBLIC STB_IMAGE_IMPLEMENTATION)
 #target_link_libraries(create_texture_animation
 ## no libs yet
 #)
