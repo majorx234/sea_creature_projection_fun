@@ -5,6 +5,7 @@ extern "C" {
 #include <cassert>
 #include <cstdint>
 #include <cstdlib>
+#include <float.h>
 
 typedef struct {
     uint32_t *pixels;
@@ -16,20 +17,49 @@ typedef struct {
     uint32_t width, height, stride;
 } Mat;
 
-Mat mat_malloc(uint32_t width, uint32_t height)
-{
-    Mat mat = {0};
-    float* items = (float*)malloc(sizeof(float)*width*height);
-    assert(items != NULL);
-    return (Mat) {
-      .items = items,
-      .width = width,
-      .height = height,
-      .stride = width,
-    };
+Mat mat_malloc(uint32_t width, uint32_t height) {
+  float* items = (float*)malloc(sizeof(float)*width*height);
+  assert(items != NULL);
+  return (Mat) {
+    .items = items,
+    .width = width,
+    .height = height,
+    .stride = width,
+  };
 }
 
-void calc_luminescence(Img* rgb_image, Mat* lum_mat) {
+Img img_malloc(uint32_t width, uint32_t height) {
+  uint32_t* pixels = (uint32_t*)malloc(sizeof(uint32_t)*width*height);
+  assert(pixels != NULL);
+  return (Img) {
+    .pixels = pixels,
+    .width = width,
+    .height = height,
+    .stride = width,
+  };
+}
+
+void min_and_max(Mat mat_in, float *mn, float *mx)
+{
+  *mn = FLT_MAX;
+  *mx = FLT_MIN;
+  for (int i = 0; i < mat_in.height * mat_in.width; i++) {
+    float value = mat_in.items[i];
+    if (value < *mn) *mn = value;
+    if (value > *mx) *mx = value;
+  }
+}
+
+void mat_to_img(Mat mat_in, Img img_out) {
+  float min, max = 0;
+  min_and_max(mat_in, &min, &max);
+  for (int i = 0; i < mat_in.height * mat_in.width; i++) {
+    uint32_t value = (int)(255.0*(mat_in.items[i]-min)/(max-min));
+    img_out.pixels[i] = 0xff000000 + value + (value << 8) + (value << (8*2));
+  }
+}
+
+void calc_luminance(Img* rgb_image, Mat* lum_mat) {
   for(unsigned int i = 0; i< rgb_image->width* rgb_image->height; i++) {
     float r = ((rgb_image->pixels[i] >> (8 * 0)) & 0xFF) / 255.0;
     float g = ((rgb_image->pixels[i] >> (8*1)) & 0xFF)/255.0;
@@ -43,12 +73,14 @@ void calc_sobel_filter(Mat lum_mat, Mat sobel_mat){
 }
 
 int main (){
-  char file_path[] = "test_img.png";
+  char file_in_path[] = "test_img.png";
+  char lum_file_out_path[] = "lum_img.png";
+  char sobel_file_out_path[] = "sobel_img.png";
   int width_ = 0;
   int height_ = 0;
-  uint32_t *pixels_ = (uint32_t*)stbi_load(file_path, &width_, &height_, NULL, 4);
+  uint32_t *pixels_ = (uint32_t*)stbi_load(file_in_path, &width_, &height_, NULL, 4);
   if (pixels_ == NULL) {
-    fprintf(stderr, "ERROR: could not read %s\n", file_path);
+    fprintf(stderr, "ERROR: could not read %s\n", file_in_path);
     return 1;
   }
   Img img = {
@@ -58,8 +90,17 @@ int main (){
     .stride = (uint32_t) width_,
   };
   Mat lum_mat = mat_malloc(width_, height_);
-  calc_luminescence(&img, &lum_mat);
+  calc_luminance(&img, &lum_mat);
+
+  Img lum_img = img_malloc(width_, height_);
+  mat_to_img(lum_mat, lum_img);
+  if (!stbi_write_png(lum_file_out_path, lum_img.width, lum_img.height, 4, lum_img.pixels, lum_img.stride*sizeof(uint32_t))) {
+        fprintf(stderr, "ERROR: could not save lum_img to file %s\n", lum_file_out_path);
+        return 1;
+    }
 
   delete pixels_;
   delete lum_mat.items;
+  delete lum_img.pixels;
+  return 0;
 }
