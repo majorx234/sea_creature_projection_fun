@@ -5,6 +5,7 @@ project(sea_creature_projection_fun
   VERSION 0.1.0
   LANGUAGES CXX)
 
+set( PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include )
 include_directories(${PROJECT_INCLUDE_DIR})
 
 find_package(raylib)
@@ -29,6 +30,10 @@ set(RAYLIB_EXAMPLE3_SRC
 )
 set(RAYLIB_EXAMPLE4_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline_moving_figures.cpp
+)
+set(CREATE_TEXTURE_ANIMATION_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/create_texture_animation/create_simple_texture_map.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb/
 )
 
 add_executable(pipe_example1)
@@ -94,4 +99,17 @@ target_include_directories(raylib_example4
 target_link_libraries(raylib_example4
   ${raylib_LIBRARIES}
 )
+
+add_executable(create_texture_animation)
+target_sources(create_texture_animation
+ PRIVATE
+  ${CREATE_TEXTURE_ANIMATION_SRC}
+)
+target_include_directories(create_texture_animation
+ PRIVATE
+  ${PROJECT_INCLUDE_DIR}/stb
+)
+#target_link_libraries(create_texture_animation
+## no libs yet
+#)
 
