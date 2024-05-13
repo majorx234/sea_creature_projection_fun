@@ -1,3 +1,4 @@
+#include <cstring>
 extern "C" {
   #include "stb_image.h"
   #include "stb_image_write.h"
@@ -68,8 +69,37 @@ void calc_luminance(Img* rgb_image, Mat* lum_mat) {
   }
 }
 
-void calc_sobel_filter(Mat lum_mat, Mat sobel_mat){
-  //TODO
+void calc_sobel_filter(Mat *lum_mat, Mat *sobel_mat){
+  assert(lum_mat->width == sobel_mat->width);
+  assert(lum_mat->height == sobel_mat->height);
+
+  static float kx[3][3] = {
+    {1.0, 0.0, -1.0},
+    {2.0, 0.0, -2.0},
+    {1.0, 0.0, -1.0},
+  };
+
+  static float ky[3][3] = {
+    {1.0, 2.0, 1.0},
+    {0.0, 0.0, 0.0},
+    {-1.0, -2.0, -1.0},
+  };
+
+  memset(sobel_mat->items, 0 , sobel_mat->width*sobel_mat->height*sizeof(float));
+  for (int cy = 1; cy < lum_mat->height-1; cy++) {
+    for (int cx = 1; cx < lum_mat->width-1; cx++) {
+      float sx = 0.0;
+      float sy = 0.0;
+
+      for (int dkx = 0; dkx < 3; dkx++) {
+        for (int dky = 0; dky < 3; dky++) {
+          sx += lum_mat->items[(cy-1+dky)*lum_mat->width+(cx-1+dkx)] * kx[dky][dkx];
+          sy += lum_mat->items[(cy-1+dky)*lum_mat->width+(cx-1+dkx)] * ky[dky][dkx];
+        }
+      }
+      sobel_mat->items[cy * sobel_mat->width + cx] = sx*sx + sy*sy;
+    }
+  }
 }
 
 int main (){
@@ -89,18 +119,33 @@ int main (){
     .height = (uint32_t)height_,
     .stride = (uint32_t) width_,
   };
+
+  // calc lumance
   Mat lum_mat = mat_malloc(width_, height_);
   calc_luminance(&img, &lum_mat);
 
   Img lum_img = img_malloc(width_, height_);
   mat_to_img(lum_mat, lum_img);
   if (!stbi_write_png(lum_file_out_path, lum_img.width, lum_img.height, 4, lum_img.pixels, lum_img.stride*sizeof(uint32_t))) {
-        fprintf(stderr, "ERROR: could not save lum_img to file %s\n", lum_file_out_path);
-        return 1;
-    }
+    fprintf(stderr, "ERROR: could not save lum_img to file %s\n", lum_file_out_path);
+    return 1;
+  }
+
+  // calc sobel
+  Mat sobel_mat = mat_malloc(width_, height_);
+  calc_sobel_filter(&lum_mat, &sobel_mat);
+
+  Img sobel_img = img_malloc(width_, height_);
+  mat_to_img(sobel_mat, sobel_img);
+  if (!stbi_write_png(sobel_file_out_path, sobel_img.width, sobel_img.height, 4, sobel_img.pixels, sobel_img.stride*sizeof(uint32_t))) {
+    fprintf(stderr, "ERROR: could not save sobel_img to file %s\n", sobel_file_out_path);
+    return 1;
+  }
 
   delete pixels_;
   delete lum_mat.items;
   delete lum_img.pixels;
+  delete sobel_mat.items;
+  delete sobel_img.pixels;
   return 0;
 }
