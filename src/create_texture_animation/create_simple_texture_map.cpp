@@ -102,6 +102,21 @@ void calc_sobel_filter(Mat *lum_mat, Mat *sobel_mat){
   }
 }
 
+void calc_seam_dp_from_energy_map(Mat *energy_mat, Mat *dp_mat) {
+  assert(energy_mat->width == dp_mat->width);
+  assert(energy_mat->height == dp_mat->height);
+
+  for (int cy = 0; cy < energy_mat->height; cy++) {
+    for (int cx = 1; cy < energy_mat->width; cy++) {
+      float value = energy_mat->items[cy*energy_mat->width + cx];
+      for (int ckx = -1; ckx <= 1; ckx++) {
+        // calc min and set to value
+        // dp_mat[cy][cx] = value
+      }
+    }
+  }
+}
+
 int main (){
   char file_in_path[] = "test_img.png";
   char lum_file_out_path[] = "lum_img.png";
