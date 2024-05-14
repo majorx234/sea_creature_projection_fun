@@ -106,13 +106,16 @@ void calc_seam_dp_from_energy_map(Mat *energy_mat, Mat *dp_mat) {
   assert(energy_mat->width == dp_mat->width);
   assert(energy_mat->height == dp_mat->height);
 
-  for (int cy = 0; cy < energy_mat->height; cy++) {
-    for (int cx = 1; cy < energy_mat->width; cy++) {
-      float value = energy_mat->items[cy*energy_mat->width + cx];
-      for (int ckx = -1; ckx <= 1; ckx++) {
-        // calc min and set to value
-        // dp_mat[cy][cx] = value
+  memcpy(dp_mat->items, energy_mat->items , dp_mat->width*dp_mat->height*sizeof(float));
+  for (int cy = 0; cy < energy_mat->height - 1; cy++) {
+    for (int cx = 1; cx < energy_mat->width-1; cx++) {
+      float min_value = dp_mat->items[cy*dp_mat->width + cx - 1];
+      for (int ckx = 0; ckx <= 1; ckx++) {
+        if (min_value > dp_mat->items[cy*dp_mat->width + cx + ckx]) {
+          min_value = dp_mat->items[cy*dp_mat->width + cx + ckx];
+        }
       }
+      dp_mat->items[(cy+1) * dp_mat->width + cx] = dp_mat->items[(cy+1) * dp_mat->width + cx ] + min_value;
     }
   }
 }
@@ -121,6 +124,7 @@ int main (){
   char file_in_path[] = "test_img.png";
   char lum_file_out_path[] = "lum_img.png";
   char sobel_file_out_path[] = "sobel_img.png";
+  char dp_file_out_path[] = "dp_img.png";
   int width_ = 0;
   int height_ = 0;
   uint32_t *pixels_ = (uint32_t*)stbi_load(file_in_path, &width_, &height_, NULL, 4);
@@ -157,10 +161,23 @@ int main (){
     return 1;
   }
 
+  // calc seam energy map
+  Mat dp_mat = mat_malloc(width_, height_);
+  calc_seam_dp_from_energy_map(&sobel_mat, &dp_mat);
+
+  Img dp_img = img_malloc(width_, height_);
+  mat_to_img(dp_mat, dp_img);
+  if (!stbi_write_png(dp_file_out_path, dp_img.width, dp_img.height, 4, dp_img.pixels, dp_img.stride*sizeof(uint32_t))) {
+    fprintf(stderr, "ERROR: could not save dp_img to file %s\n", dp_file_out_path);
+    return 1;
+  }
+
   delete pixels_;
   delete lum_mat.items;
   delete lum_img.pixels;
   delete sobel_mat.items;
   delete sobel_img.pixels;
+  delete dp_mat.items;
+  delete dp_img.pixels;
   return 0;
 }
