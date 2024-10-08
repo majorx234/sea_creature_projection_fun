@@ -3,6 +3,7 @@ build/
 .projectile
 compile_commands.json
 material/
+notizen/
 .cache/
 
 ##### Emacs

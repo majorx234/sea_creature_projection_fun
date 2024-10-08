@@ -31,6 +31,9 @@ set(RAYLIB_EXAMPLE3_SRC
 set(RAYLIB_EXAMPLE4_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline_moving_figures.cpp
 )
+set(RAYLIB_EXAMPLE5_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/raylib_examples/main_render_pipeline_moving_figures_scaling.cpp
+)
 set(CREATE_TEXTURE_ANIMATION_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/create_texture_animation/create_simple_texture_map.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/include/stb/stb/
@@ -97,6 +100,19 @@ target_include_directories(raylib_example4
   ${raylib_INCLUDE_DIRS}
 )
 target_link_libraries(raylib_example4
+  ${raylib_LIBRARIES}
+)
+
+add_executable(raylib_example5)
+target_sources(raylib_example5
+ PRIVATE
+  ${RAYLIB_EXAMPLE5_SRC}
+)
+target_include_directories(raylib_example5
+ PRIVATE
+  ${raylib_INCLUDE_DIRS}
+)
+target_link_libraries(raylib_example5
   ${raylib_LIBRARIES}
 )
 
